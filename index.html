@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>باسل أبليكشن - اختبار الشخصية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .welcome-screen {
+            text-align: center;
+        }
+
+        .welcome-screen h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .welcome-screen p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .question h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 15px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: right;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateX(-5px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .question-counter {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+        }
+
+        .result-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .personality-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .personality-badge h2 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .personality-badge p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .result-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .result-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .result-section p, .result-section ul {
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .result-section ul {
+            list-style-position: inside;
+            text-align: right;
+        }
+
+        .result-section li {
+            margin-bottom: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .personality-badge h2 {
+                font-size: 2em;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 1em;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #999;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 باسل أبليكشن</h1>
+            <p>حياك الله في باسل أبليكشن لتحديد نمط شخصيتك</p>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="welcome-screen">
+            <h2>اكتشف نمط شخصيتك الحقيقي</h2>
+            <p>أجب على 10 أسئلة بسيطة لتعرف أي نمط شخصية أنت من بين: Alpha، Beta، Sigma، Gamma، وOmega</p>
+            <p>الاختبار سريع ولا يستغرق أكثر من دقيقتين!</p>
+            <button class="btn" onclick="startTest()">ابدأ الاختبار</button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="progressSection" class="hidden">
+            <div class="question-counter">
+                <span id="currentQuestion">1</span> من <span id="totalQuestions">10</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Questions Container -->
+        <div id="questionsContainer" class="hidden"></div>
+
+        <!-- Result Container -->
+        <div id="resultContainer" class="result-container"></div>
+
+        <div class="footer">
+            <p>© 2026 باسل أبليكشن - جميع الحقوق محفوظة</p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "عندما تواجه تحدياً صعباً، ما هو أول رد فعل لديك؟",
+                options: [
+                    { text: "أتصدى له مباشرة وأقود الآخرين لحله", scores: { alpha: 3, beta: 0, sigma: 1, gamma: 0, omega: 0 } },
+                    { text: "أفكر بهدوء وأخطط للحل بدون ضجة", scores: { alpha: 0, beta: 1, sigma: 3, gamma: 1, omega: 0 } },
+                    { text: "أطلب المساعدة من الفريق وأتعاون معهم", scores: { alpha: 0, beta: 3, gamma: 2, omega: 1, sigma: 0 } },
+                    { text: "أتجنب المواجهة وأبحث عن حل بديل", scores: { alpha: 0, beta: 0, sigma: 0, gamma: 1, omega: 3 } }
+                ]
+            },
+            {
+                question: "كيف تفضل قضاء وقت فراغك؟",
+                options: [
+                    { text: "في نشاطات اجتماعية وقيادة الأحداث", scores: { alpha: 3, beta: 2, sigma: 0, gamma: 1, omega: 0 } },
+                    { text: "مع أصدقاء مقربين في جو هادئ", scores: { alpha: 0, beta: 3, gamma: 2, omega: 1, sigma: 1 } },
+                    { text: "بمفردي في مشاريع خاصة أو هوايات", scores: { alpha: 0, beta: 0, sigma: 3, gamma: 1, omega: 2 } },
+                    { text: "في المنزل أمام الشاشة أو القراءة", scores: { alpha: 0, beta: 1, sigma: 1, gamma: 2, omega: 3 } }
+                ]
+            },
+            {
+                question: "ما هو أسلوبك في اتخاذ القرارات المهمة؟",
+                options: [
+                    { text: "أقرر بسرعة وثقة وأتحمل المسؤولية", scores: { alpha: 3, beta: 1, sigma: 2, gamma: 0, omega: 0 } },
+                    { text: "أستشير الآخرين وأصل لقرار جماعي", scores: { alpha: 0, beta: 3, gamma: 2, omega: 1, sigma: 0 } },
+                    { text: "أحلل الموقف بعمق وأقرر باستقلالية", scores: { alpha: 1, beta: 0, sigma: 3, gamma: 1, omega: 0 } },
+                    { text: "أتردد كثيراً وأحتاج وقتاً طويلاً", scores: { alpha: 0, beta: 0, sigma: 0, gamma: 2, omega: 3 } }
+                ]
+            },
+            {
+                question: "كيف يراك الآخرون عادة؟",
+                options: [
+                    { text: "قائد قوي وواثق من نفسه", scores: { alpha: 3, beta: 0, sigma: 1, gamma: 0, omega: 0 } },
+                    { text: "شخص داعم ومتعاون ومحبوب", scores: { alpha: 0, beta: 3, gamma: 2, omega: 0, sigma: 0 } },
+                    { text: "غامض ومستقل ولكن مؤثر", scores: { alpha: 1, beta: 0, sigma: 3, gamma: 0, omega: 1 } },
+                    { text: "هادئ ومنعزل ولا يحب الأضواء", scores: { alpha: 0, beta: 0, sigma: 1, gamma: 2, omega: 3 } }
+                ]
+            },
+            {
+                question: "ما هو موقفك من المنافسة؟",
+                options: [
+                    { text: "أحب المنافسة وأسعى دائماً للفوز", scores: { alpha: 3, beta: 0, sigma: 2, gamma: 0, omega: 0 } },
+                    { text: "أنافس بروح رياضية ولكن الفوز ليس كل شيء", scores: { alpha: 1, beta: 3, gamma: 2, omega: 0, sigma: 1 } },
+                    { text: "أنافس نفسي فقط ولا أهتم بالآخرين", scores: { alpha: 0, beta: 0, sigma: 3, gamma: 1, omega: 1 } },
+                    { text: "أتجنب المنافسة وأفضل البقاء بعيداً", scores: { alpha: 0, beta: 0, sigma: 0, gamma: 2, omega: 3 } }
+                ]
+            },
+            {
+                question: "عندما تكون في مجموعة، ما هو دورك الطبيعي؟",
+                options: [
+                    { text: "القائد الذي يوجه الجميع", scores: { alpha: 3, beta: 1, sigma: 0, gamma: 0, omega: 0 } },
+                    { text: "الوسيط الذي يجمع الآراء ويساعد الجميع", scores: { alpha: 0, beta: 3, gamma: 2, omega: 0, sigma: 0 } },
+                    { text: "المراقب الذي يساهم عند الحاجة فقط", scores: { alpha: 0, beta: 0, sigma: 3, gamma: 2, omega: 1 } },
+                    { text: "التابع الذي يفضل عدم لفت الانتباه", scores: { alpha: 0, beta: 1, sigma: 0, gamma: 1, omega: 3 } }
+                ]
+            },
+            {
+                question: "كيف تتعامل مع النقد؟",
+                options: [
+                    { text: "أدافع عن موقفي بقوة وأوضح وجهة نظري", scores: { alpha: 3, beta: 0, sigma: 1, gamma: 0, omega: 0 } },
+                    { text: "أستمع بانفتاح وأحاول التحسين", scores: { alpha: 0, beta: 3, gamma: 2, omega: 1, sigma: 1 } },
+                    { text: "أستمع ولكن أقرر بنفسي ما إذا كان مفيداً", scores: { alpha: 1, beta: 1, sigma: 3, gamma: 1, omega: 0 } },
+                    { text: "أتأثر سلباً وأشعر بالإحباط", scores: { alpha: 0, beta: 0, sigma: 0, gamma: 2, omega: 3 } }
+                ]
+            },
+            {
+                question: "ما هي أولوياتك في الحياة؟",
+                options: [
+                    { text: "النجاح والسلطة والتأثير على الآخرين", scores: { alpha: 3, beta: 0, sigma: 1, gamma: 0, omega: 0 } },
+                    { text: "العلاقات الاجتماعية والانسجام مع الجميع", scores: { alpha: 0, beta: 3, gamma: 2, omega: 1, sigma: 0 } },
+                    { text: "الحرية والاستقلالية وتحقيق الذات", scores: { alpha: 1, beta: 0, sigma: 3, gamma: 1, omega: 1 } },
+                    { text: "الراحة والاستقرار وتجنب المشاكل", scores: { alpha: 0, beta: 1, sigma: 0, gamma: 2, omega: 3 } }
+                ]
+            },
+            {
+                question: "كيف تتصرف في موقف اجتماعي جديد؟",
+                options: [
+                    { text: "أبادر بالتعرف على الجميع وأكون محور الاهتمام", scores: { alpha: 3, beta: 2, sigma: 0, gamma: 0, omega: 0 } },
+                    { text: "أتواصل بلطف وأبني علاقات تدريجياً", scores: { alpha: 0, beta: 3, gamma: 2, omega: 1, sigma: 0 } },
+                    { text: "أراقب الوضع أولاً ثم أتفاعل بحذر", scores: { alpha: 0, beta: 0, sigma: 3, gamma: 2, omega: 1 } },
+                    { text: "أشعر بعدم الراحة وأفضل البقاء صامتاً", scores: { alpha: 0, beta: 0, sigma: 0, gamma: 1, omega: 3 } }
+                ]
+            },
+            {
+                question: "ما هو أسلوبك في العمل أو الدراسة؟",
+                options: [
+                    { text: "أقود المشاريع وأحفز الفريق لتحقيق الأهداف", scores: { alpha: 3, beta: 1, sigma: 0, gamma: 0, omega: 0 } },
+                    { text: "أعمل بروح الفريق وأدعم زملائي", scores: { alpha: 0, beta: 3, gamma: 2, omega: 1, sigma: 0 } },
+                    { text: "أفضل العمل المستقل وأنجز بكفاءة عالية", scores: { alpha: 1, beta: 0, sigma: 3, gamma: 1, omega: 1 } },
+                    { text: "أنفذ ما يطلب مني دون مبادرة كبيرة", scores: { alpha: 0, beta: 1, sigma: 0, gamma: 2, omega: 3 } }
+                ]
+            }
+        ];
+
+        const personalityTypes = {
+            alpha: {
+                name: "Alpha",
+                title: "شخصية ألفا - القائد الطبيعي",
+                description: "أنت شخصية قيادية بالفطرة، تتمتع بثقة عالية بالنفس وقدرة على اتخاذ القرارات الصعبة. تحب أن تكون في المقدمة وتقود الآخرين نحو النجاح. لديك كاريزما طبيعية تجذب الناس إليك.",
+                strengths: ["ثقة قوية بالنفس", "قدرة على القيادة واتخاذ القرارات", "شجاعة في مواجهة التحديات", "تحفيز الآخرين وإلهامهم", "طموح عالٍ ورؤية واضحة"],
+                weaknesses: ["قد تكون متسلطاً أحياناً", "صعوبة في قبول النقد", "الاندفاع في القرارات", "قلة الصبر مع الآخرين"],
+                advice: "حاول أن تستمع للآخرين أكثر وتمنحهم فرصة للمشاركة. القيادة الحقيقية تكمن في تمكين الآخرين وليس السيطرة عليهم."
+            },
+            beta: {
+                name: "Beta",
+                title: "شخصية بيتا - الداعم الموثوق",
+                description: "أنت شخص اجتماعي ومحبوب، تفضل العمل ضمن فريق وتقدر العلاقات الإنسانية. لديك قدرة عالية على التعاطف والتواصل مع الآخرين، وتسعى دائماً لخلق بيئة متناغمة.",
+                strengths: ["مهارات تواصل ممتازة", "تعاون وعمل جماعي", "تعاطف وحس إنساني عالٍ", "قدرة على حل النزاعات", "موثوق ومخلص في العلاقات"],
+                weaknesses: ["صعوبة في اتخاذ قرارات حاسمة", "الخوف من الصراع", "قد تضع احتياجات الآخرين قبل احتياجاتك", "الحساسية الزائدة"],
+                advice: "تعلم أن تضع حدوداً صحية ولا تخف من التعبير عن رأيك. موافقتك المستمرة قد تجعل الآخرين يستغلون طيبتك."
+            },
+            sigma: {
+                name: "Sigma",
+                title: "شخصية سيجما - المستقل الغامض",
+                description: "أنت شخصية مستقلة وغامضة، تفضل أن تعمل خارج التسلسل الهرمي التقليدي. لديك ثقة هادئة بنفسك ولا تحتاج لموافقة الآخرين. تحقق النجاح بطريقتك الخاصة دون الحاجة لإثبات نفسك.",
+                strengths: ["استقلالية تامة واكتفاء ذاتي", "ثقة هادئة وعميقة", "قدرة على التفكير النقدي", "مرونة وتكيف مع التغيير", "عدم الحاجة للموافقة الاجتماعية"],
+                weaknesses: ["الانعزال الاجتماعي أحياناً", "صعوبة في بناء علاقات عميقة", "قد يراك البعض متكبراً", "رفض المساعدة حتى عند الحاجة"],
+                advice: "حاول أن تفتح قلبك للآخرين أكثر. الاستقلالية مهمة، لكن العلاقات الإنسانية الحقيقية تثري حياتك بشكل لا يقدر بثمن."
+            },
+            gamma: {
+                name: "Gamma",
+                title: "شخصية جاما - المفكر الحذر",
+                description: "أنت شخص مدروس وحذر، تفضل التفكير العميق قبل اتخاذ أي قرار. لديك ذكاء عاطفي جيد وتقدر الاستقرار والأمان في حياتك. تتجنب المخاطر غير الضرورية.",
+                strengths: ["تفكير عميق ومنطقي", "حذر ومسؤول في القرارات", "ذكاء عاطفي واجتماعي", "تقدير للتفاصيل الصغيرة", "موثوق في الالتزامات"],
+                weaknesses: ["التردد والخوف من المخاطرة", "الإفراط في التفكير", "صعوبة في التكيف السريع", "القلق من المجهول"],
+                advice: "حاول أن تخرج من منطقة الراحة أحياناً. النمو الحقيقي يحدث عندما نواجه مخاوفنا ونتحدى أنفسنا."
+            },
+            omega: {
+                name: "Omega",
+                title: "شخصية أوميجا - الروح الهادئة",
+                description: "أنت شخص هادئ ومسالم، تفضل الانسجام والاستقرار على المنافسة والصراع. لديك عالم داخلي غني وتقدر الوقت مع نفسك. قد لا تسعى للقيادة لكنك تملك عمقاً فكرياً مميزاً.",
+                strengths: ["هدوء وسلام داخلي", "عمق فكري وتأملي", "قدرة على الاستماع الجيد", "إبداع في المجالات الفنية", "عدم الانجراف وراء الآخرين"],
+                weaknesses: ["انخفاض الثقة بالنفس أحياناً", "تجنب المواجهة", "صعوبة في التعبير عن الرأي", "الانعزال الاجتماعي", "قد يتم تجاهلك في المجموعات"],
+                advice: "ثق بقيمتك الذاتية وقدراتك. رأيك مهم ويستحق أن يسمع. تعلم أن تعبر عن نفسك بثقة حتى لو كان ذلك صعباً في البداية."
+            }
+        };
+
+        let currentQuestionIndex = 0;
+        let scores = { alpha: 0, beta: 0, sigma: 0, gamma: 0, omega: 0 };
+
+        function startTest() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('progressSection').classList.remove('hidden');
+            document.getElementById('questionsContainer').classList.remove('hidden');
+            showQuestion(0);
+        }
+
+        function showQuestion(index) {
+            const container = document.getElementById('questionsContainer');
+            const question = questions[index];
+            
+            container.innerHTML = `
+                <div class="question-container active">
+                    <div class="question">
+                        <h3>${question.question}</h3>
+                        <div class="options">
+                            ${question.options.map((option, i) => `
+                                <div class="option" onclick="selectOption(${index}, ${i})">
+                                    ${option.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            updateProgress();
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            const question = questions[questionIndex];
+            const selectedOption = question.options[optionIndex];
+
+            // Update scores
+            Object.keys(selectedOption.scores).forEach(type => {
+                scores[type] += selectedOption.scores[type];
+            });
+
+            // Visual feedback
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[optionIndex].classList.add('selected');
+
+            // Move to next question or show results
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion(currentQuestionIndex);
+                } else {
+                    showResults();
+                }
+            }, 300);
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('totalQuestions').textContent = questions.length;
+        }
+
+        function showResults() {
+            // Find dominant personality type
+            let maxScore = 0;
+            let dominantType = 'alpha';
+            
+            Object.keys(scores).forEach(type => {
+                if (scores[type] > maxScore) {
+                    maxScore = scores[type];
+                    dominantType = type;
+                }
+            });
+
+            const personality = personalityTypes[dominantType];
+
+            // Hide questions and progress
+            document.getElementById('progressSection').classList.add('hidden');
+            document.getElementById('questionsContainer').classList.add('hidden');
+
+            // Show results
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.innerHTML = `
+                <div class="personality-badge">
+                    <h2>${personality.title}</h2>
+                    <p>نمط شخصيتك هو: ${personality.name}</p>
+                </div>
+
+                <div class="result-section">
+                    <h3>📝 الوصف</h3>
+                    <p>${personality.description}</p>
+                </div>
+
+                <div class="result-section">
+                    <h3>💪 نقاط القوة</h3>
+                    <ul>
+                        ${personality.strengths.map(s => `<li>${s}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="result-section">
+                    <h3>⚠️ نقاط التحسين</h3>
+                    <ul>
+                        ${personality.weaknesses.map(w => `<li>${w}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="result-section">
+                    <h3>💡 نصيحة لك</h3>
+                    <p>${personality.advice}</p>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn" onclick="shareResult('${personality.name}')">📋 نسخ النتيجة</button>
+                    <button class="btn btn-secondary" onclick="resetTest()">🔄 إعادة الاختبار</button>
+                </div>
+            `;
+
+            resultContainer.classList.add('active');
+        }
+
+        function shareResult(personalityName) {
+            const personality = personalityTypes[personalityName.toLowerCase()];
+            const text = `🌟 نتيجة اختبار الشخصية - باسل أبليكشن 🌟\n\n` +
+                        `نمط شخصيتي: ${personality.title}\n\n` +
+                        `${personality.description}\n\n` +
+                        `جرب الاختبار أنت أيضاً!`;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('تم نسخ النتيجة! يمكنك الآن مشاركتها مع أصدقائك');
+                });
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('تم نسخ النتيجة! يمكنك الآن مشاركتها مع أصدقائك');
+            }
+        }
+
+        function resetTest() {
+            currentQuestionIndex = 0;
+            scores = { alpha: 0, beta: 0, sigma: 0, gamma: 0, omega: 0 };
+            
+            document.getElementById('resultContainer').classList.remove('active');
+            document.getElementById('resultContainer').innerHTML = '';
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            document.getElementById('progressSection').classList.add('hidden');
+            document.getElementById('questionsContainer').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
